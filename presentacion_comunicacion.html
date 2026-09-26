@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eficacia en la Comunicación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Modo Oscuro - Paleta */
+            --bg-color: #0f172a;        /* Fondo principal (Slate 900) */
+            --card-bg: #1e293b;         /* Fondo de tarjetas (Slate 800) */
+            --text-main: #f8fafc;       /* Texto principal (Slate 50) */
+            --text-muted: #cbd5e1;      /* Texto secundario (Slate 300) */
+            --heading-color: #38bdf8;   /* Títulos (Sky 400) */
+            
+            /* Acentos vibrantes para modo oscuro */
+            --accent-blue: #38bdf8;     /* Sky 400 */
+            --accent-green: #4ade80;    /* Green 400 */
+            --accent-yellow: #facc15;   /* Yellow 400 */
+            --accent-red: #f87171;      /* Red 400 */
+            --accent-purple: #c084fc;   /* Purple 400 */
+            
+            /* Fondos oscuros para círculos */
+            --bg-blue-dark: #1e3a8a;
+            --bg-green-dark: #14532d;
+            --bg-yellow-dark: #713f12;
+            --bg-red-dark: #7f1d1d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .presentation {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4%;
+            pointer-events: none;
+            background-color: var(--bg-color);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--heading-color);
+            text-align: center;
+        }
+
+        h1 { font-size: 5vw; margin-bottom: 0.2em; line-height: 1.1; color: var(--text-main); }
+        h2 { font-size: 3.5vw; margin-bottom: 1em; }
+        .subtitle { font-size: 2vw; color: var(--accent-blue); font-style: italic; margin-bottom: 2em; }
+
+        /* Icon Cards */
+        .grid-cards {
+            display: flex;
+            justify-content: center;
+            gap: 3vw;
+            width: 90%;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-top: 6px solid var(--accent-blue);
+        }
+
+        .card-icon {
+            font-size: 4vw;
+            margin-bottom: 20px;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .card h3 { font-size: 1.8vw; color: var(--text-main); margin-bottom: 15px; }
+        .card p { font-size: 1.5vw; color: var(--text-muted); line-height: 1.5; }
+
+        /* Diagrama de Comunicación (Slide 3) */
+        .diagram-container {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 60vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .person-circle {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .person-circle.sender { background-color: var(--bg-blue-dark); color: var(--accent-blue); border: 2px solid var(--accent-blue); }
+        .person-circle.receiver { background-color: var(--bg-green-dark); color: var(--accent-green); border: 2px solid var(--accent-green); }
+
+        .diagram-step {
+            position: absolute;
+            background: var(--card-bg);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            text-align: center;
+            font-size: 1vw;
+            font-weight: bold;
+            color: var(--text-main);
+            border: 4px solid;
+            z-index: 3;
+        }
+        
+        .diagram-step i { font-size: 35px; margin-bottom: 5px; }
+
+        .step-1 { left: -60px; top: 10%; border-color: var(--accent-blue); }
+        .step-1 i { color: var(--accent-blue); }
+        
+        .step-2 { left: -60px; bottom: 10%; border-color: var(--accent-green); }
+        .step-2 i { color: var(--accent-green); }
+        
+        .step-5 { right: -60px; top: 10%; border-color: var(--accent-yellow); }
+        .step-5 i { color: var(--accent-yellow); }
+        
+        .step-6 { right: -60px; bottom: 10%; border-color: var(--accent-red); }
+        .step-6 i { color: var(--accent-red); }
+
+        .center-area {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 300px;
+            z-index: 1;
+        }
+
+        .arrow-top {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2vw;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .arrow-top i { font-size: 4vw; margin-top: 10px; color: var(--accent-blue); }
+
+        .arrow-bottom {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2vw;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .arrow-bottom i { font-size: 4vw; margin-bottom: 10px; transform: rotate(180deg); color: var(--accent-blue); }
+
+        .ruidos {
+            font-size: 3.5vw;
+            color: var(--text-main);
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        .ruidos i { color: var(--accent-yellow); font-size: 5vw; margin-bottom: 10px; }
+
+        .canal-badge {
+            background: var(--card-bg);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: var(--accent-blue);
+            font-size: 1.2vw;
+            border: 1px solid var(--accent-blue);
+        }
+
+        /* Timeline / Flow (Slide Empatía) */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .flow-step {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 28%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 2px solid var(--accent-purple);
+        }
+        .flow-step i { font-size: 3.5vw; color: var(--accent-purple); margin-bottom: 15px; }
+        .flow-step h3 { font-size: 1.5vw; margin-bottom: 10px; color: var(--text-main); }
+        .flow-arrow { font-size: 3vw; color: #475569; }
+
+        /* Balance (Slide Asertividad) */
+        .balance-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 90%;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        .balance-card {
+            flex: 1;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .pasivo { background: var(--bg-yellow-dark); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
+        .pasivo p { color: #fef08a; }
+        
+        .asertivo { background: var(--bg-green-dark); color: var(--accent-green); transform: scale(1.05); border: 3px solid var(--accent-green); z-index: 2; box-shadow: 0 0 30px rgba(74, 222, 128, 0.2); }
+        .asertivo p { color: #bbf7d0; }
+        
+        .agresivo { background: var(--bg-red-dark); color: var(--accent-red); border: 1px solid var(--accent-red); }
+        .agresivo p { color: #fecaca; }
+        
+        .balance-card i { font-size: 4vw; margin-bottom: 15px; }
+        .balance-card h3 { font-size: 2vw; margin-bottom: 10px; font-family: 'Lato', sans-serif; color: white; }
+        .balance-card p { font-size: 1.4vw; }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid #475569;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn:hover { transform: scale(1.1); background: var(--accent-blue); border-color: var(--accent-blue); color: #0f172a; }
+
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%; height: 8px;
+            background: #1e293b; z-index: 100;
+        }
+        .progress-bar {
+            height: 100%; background: var(--accent-blue); width: 0%; transition: width 0.3s ease;
+        }
+        
+        strong { color: white; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation" id="presentation">
+        
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <i class="fa-solid fa-comments" style="font-size: 8vw; color: var(--accent-blue); margin-bottom: 20px;"></i>
+            <h1>La eficacia en la comunicación</h1>
+            <p class="subtitle">Claves para formar equipos exitosos</p>
+            <p style="font-size: 1.5vw; color: var(--text-muted); margin-top: 30px;">
+                <i class="fa-solid fa-desktop"></i> Usa las flechas para navegar
+            </p>
+        </div>
+
+        <!-- Slide 2: Importancia -->
+        <div class="slide">
+            <h2>¿Por qué es importante?</h2>
+            <div class="grid-cards">
+                <div class="card" style="border-top-color: var(--accent-blue);">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-users" style="color: var(--accent-blue);"></i>
+                    </div>
+                    <h3>Base del Equipo</h3>
+                    <p>Sin comunicación, <strong>no hay equipo</strong>. Es el motor que mantiene unido al grupo.</p>
+                </div>
+                <div class="card" style="border-top-color: var(--accent-yellow);">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-bullseye" style="color: var(--accent-yellow);"></i>
+                    </div>
+                    <h3>Motivación</h3>
+                    <p>Permite entender para qué jugamos y ponernos de acuerdo en los <strong>objetivos</strong>.</p>
+                </div>
+                <div class="card" style="border-top-color: var(--accent-green);">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-handshake-angle" style="color: var(--accent-green);"></i>
+                    </div>
+                    <h3>Confianza y Respeto</h3>
+                    <p>Son el cimiento de todo. No se dicen con palabras, <strong>se demuestran con acciones</strong>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Diagrama Visual (Cómo nos comunicamos) -->
+        <div class="slide">
+            <h2>El Proceso de Comunicación</h2>
+            <div class="diagram-container">
+                
+                <!-- Emisor -->
+                <div class="person-circle sender">
+                    <i class="fa-solid fa-head-side-cough"></i>
+                    <div class="diagram-step step-1">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>1. Decido</span>
+                    </div>
+                    <div class="diagram-step step-2">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>2. Traduzco</span>
+                    </div>
+                </div>
+
+                <!-- Centro -->
+                <div class="arrow-top">
+                    <span>3. Envío / Mensaje</span><br>
+                    <i class="fa-solid fa-arrow-right-long"></i>
+                </div>
+
+                <div class="center-area">
+                    <div class="ruidos">
+                        <i class="fa-solid fa-bolt"></i><br>
+                        Ruidos
+                    </div>
+                    <span class="canal-badge">4. Canal</span>
+                </div>
+
+                <div class="arrow-bottom">
+                    <i class="fa-solid fa-arrow-left-long"></i><br>
+                    <span>7. Feedback</span>
+                </div>
+
+                <!-- Receptor -->
+                <div class="person-circle receiver">
+                    <i class="fa-solid fa-ear-listen"></i>
+                    <div class="diagram-step step-5">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                        <span>5. Recibís</span>
+                    </div>
+                    <div class="diagram-step step-6">
+                        <i class="fa-solid fa-cogs"></i>
+                        <span>6. Interpretas</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Slide 4: Para qué y fallas -->
+        <div class="slide">
+            <h2>Propósito y Barreras</h2>
+            <div class="grid-cards" style="align-items: stretch;">
+                <div class="card" style="border-top-color: var(--accent-green); display: flex; flex-direction: column;">
+                    <h3><i class="fa-solid fa-lightbulb" style="color: var(--accent-green);"></i> ¿Para qué nos comunicamos?</h3>
+                    <ul style="text-align: left; margin: 20px auto; font-size: 1.6vw; color: var(--text-muted); list-style: none;">
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-circle-info" style="color:var(--accent-blue); margin-right: 10px;"></i> Informar y evaluar</li>
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-fire" style="color:var(--accent-red); margin-right: 10px;"></i> Motivar y convencer</li>
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-peace" style="color:var(--accent-green); margin-right: 10px;"></i> Resolver peleas</li>
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-user-group" style="color:var(--accent-purple); margin-right: 10px;"></i> Conocer al otro</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top-color: var(--accent-red); display: flex; flex-direction: column;">
+                    <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-red);"></i> ¿Por qué falla?</h3>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px;">
+                        <div style="background: var(--bg-red-dark); border: 1px solid var(--accent-red); padding: 15px 30px; border-radius: 15px; width: 100%;">
+                            <strong style="color: var(--accent-red);">Ruidos o Barreras</strong><br>
+                            <span style="font-size: 1.3vw; color: #fecaca;">Distorsionan el mensaje</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px 30px; border-radius: 15px; width: 100%; border-left: 5px solid var(--accent-red);">
+                            <strong>El Doble Mensaje</strong><br>
+                            <span style="font-size: 1.3vw; color: var(--text-muted);">Ej: Decir "no estoy enojado" pero gritar y apretar los puños.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Empatía -->
+        <div class="slide">
+            <h2>1° Herramienta: Empatía</h2>
+            <p style="font-size: 2vw; color: var(--text-muted);">Ponerse en el lugar del otro, <strong style="color: var(--accent-blue);">pero desde SU lugar</strong>.</p>
+            
+            <div class="flow-container">
+                <div class="flow-step">
+                    <i class="fa-solid fa-eye"></i>
+                    <h3>1. Darme cuenta</h3>
+                    <p style="font-size: 1.2vw; color: var(--text-muted);">Reconocer que necesito ser empático.</p>
+                </div>
+                <i class="fa-solid fa-chevron-right flow-arrow"></i>
+                <div class="flow-step">
+                    <i class="fa-solid fa-ear-listen"></i>
+                    <h3>2. Escuchar</h3>
+                    <p style="font-size: 1.2vw; color: var(--text-muted);">Tomarme el tiempo de escuchar cómo se siente de verdad.</p>
+                </div>
+                <i class="fa-solid fa-chevron-right flow-arrow"></i>
+                <div class="flow-step">
+                    <i class="fa-solid fa-hands-holding-child"></i>
+                    <h3>3. Ayudar</h3>
+                    <p style="font-size: 1.2vw; color: var(--text-muted);">Hacer algo para ayudarlo a cumplir su meta.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Escucha Activa -->
+        <div class="slide">
+            <h2>2° Herramienta (A): Escucha Activa</h2>
+            <p style="font-size: 1.8vw; color: var(--text-muted); margin-bottom: 30px;">Oír es automático. <strong style="color: var(--accent-blue);">Escuchar es actitud y esfuerzo.</strong></p>
+            
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 90%;">
+                <div class="card" style="min-width: 200px; border-top: none; background: var(--card-bg); border: 2px solid var(--accent-blue);">
+                    <i class="fa-solid fa-scale-balanced" style="font-size: 3vw; color: var(--accent-blue); margin-bottom: 10px;"></i>
+                    <p style="font-weight: bold; color: white;">No juzgar</p>
+                </div>
+                <div class="card" style="min-width: 200px; border-top: none; background: var(--card-bg); border: 2px solid var(--accent-red);">
+                    <i class="fa-solid fa-mobile-screen" style="font-size: 3vw; color: var(--accent-red); margin-bottom: 10px;"></i>
+                    <p style="font-weight: bold; color: white;">Sin celular</p>
+                </div>
+                <div class="card" style="min-width: 200px; border-top: none; background: var(--card-bg); border: 2px solid var(--accent-green);">
+                    <i class="fa-solid fa-person-rays" style="font-size: 3vw; color: var(--accent-green); margin-bottom: 10px;"></i>
+                    <p style="font-weight: bold; color: white;">Postura relajada</p>
+                </div>
+                <div class="card" style="min-width: 200px; border-top: none; background: var(--card-bg); border: 2px solid var(--accent-red);">
+                    <i class="fa-solid fa-hand" style="font-size: 3vw; color: var(--accent-red); margin-bottom: 10px;"></i>
+                    <p style="font-weight: bold; color: white;">No interrumpir</p>
+                </div>
+                <div class="card" style="min-width: 200px; border-top: none; background: var(--card-bg); border: 2px solid var(--accent-purple);">
+                    <i class="fa-solid fa-comment-dots" style="font-size: 3vw; color: var(--accent-purple); margin-bottom: 10px;"></i>
+                    <p style="font-weight: bold; color: white;">Mostrar seguimiento</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Asertividad -->
+        <div class="slide">
+            <h2>2° Herramienta (B): Asertividad</h2>
+            <p style="font-size: 1.8vw; color: var(--text-muted);">Decir lo que pienso y siento <strong style="color: white;">sin pisar al otro y sin dejar que me pisen</strong>.</p>
+            
+            <div class="balance-container">
+                <div class="balance-card pasivo">
+                    <i class="fa-solid fa-ghost"></i>
+                    <h3>Pasivo</h3>
+                    <p>No dice nada por <strong>miedo</strong> o vergüenza.<br>Falta de confianza.</p>
+                </div>
+                <div class="balance-card asertivo">
+                    <i class="fa-solid fa-check-double"></i>
+                    <h3>Asertivo</h3>
+                    <p>Poder decir "NO".<br>Pedir un favor.<br>Decir algo lindo o lo que no nos gusta.</p>
+                </div>
+                <div class="balance-card agresivo">
+                    <i class="fa-solid fa-volcano"></i>
+                    <h3>Agresivo</h3>
+                    <p>Defiende lo suyo a los gritos <strong>sin importarle</strong> el otro.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Cierre -->
+        <div class="slide">
+            <h2>¿Qué habilidades tengo yo?</h2>
+            
+            <div style="background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 80%; text-align: center; border-bottom: 8px solid var(--accent-blue);">
+                <i class="fa-solid fa-dumbbell" style="font-size: 5vw; color: var(--accent-blue); margin-bottom: 20px;"></i>
+                <p style="font-size: 2vw; margin-bottom: 20px; color: var(--text-main);">
+                    La comunicación es una habilidad que <strong>se entrena</strong>.
+                </p>
+                <p style="font-size: 1.6vw; color: var(--text-muted); margin-bottom: 30px;">
+                    Requiere tener clara tu filosofía, quién eres y tus valores. Si no sabes quién eres, no puedes comunicar bien.
+                </p>
+                <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-blue); padding: 20px; border-radius: 10px;">
+                    <p style="font-size: 2.2vw; color: var(--accent-blue); font-weight: bold; font-style: italic;">
+                        "¿Cómo estoy comunicando yo en mi equipo?<br>¿Escucho de verdad o espero para contestar?"
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="btn" id="nextBtn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            
+            const progress = ((currentSlide) / (slides.length - 1)) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'Enter') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
