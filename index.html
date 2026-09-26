@@ -119,50 +119,62 @@
         .card h3 { font-size: clamp(1.2rem, 1.8vw, 2rem); color: var(--text-main); margin-bottom: 15px; }
         .card p { font-size: clamp(1rem, 1.5vw, 1.5rem); color: var(--text-muted); line-height: 1.5; }
 
-        /* Diagrama de Comunicación (Slide 3) */
-        .diagram-container {
-            position: relative;
+        /* Slide 3 - Nuevo Diagrama con Grid (Más Robusto) */
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+            justify-items: center;
             width: 100%;
-            max-width: 1000px;
-            height: auto;
-            min-height: 60vh;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1100px;
             margin-top: 20px;
-            padding: 20px;
+        }
+
+        .actor-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .center-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            gap: 20px;
         }
 
         .person-circle {
-            width: clamp(120px, 20vw, 220px);
-            height: clamp(120px, 20vw, 220px);
+            width: clamp(120px, 15vw, 180px);
+            height: clamp(120px, 15vw, 180px);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: clamp(3rem, 6vw, 6rem);
-            position: relative;
-            z-index: 2;
+            font-size: clamp(3rem, 5vw, 5rem);
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
             flex-shrink: 0;
+            z-index: 2;
         }
 
         .person-circle.sender { background-color: var(--bg-blue-dark); color: var(--accent-blue); border: 2px solid var(--accent-blue); }
         .person-circle.receiver { background-color: var(--bg-green-dark); color: var(--accent-green); border: 2px solid var(--accent-green); }
 
         .diagram-step {
-            position: absolute;
             background: var(--card-bg);
             border-radius: 50%;
-            width: clamp(70px, 10vw, 100px);
-            height: clamp(70px, 10vw, 100px);
+            width: clamp(80px, 10vw, 110px);
+            height: clamp(80px, 10vw, 110px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
             text-align: center;
-            font-size: clamp(0.6rem, 1vw, 1rem);
+            font-size: clamp(0.7rem, 1vw, 1rem);
             font-weight: bold;
             color: var(--text-main);
             border: 3px solid;
@@ -171,51 +183,20 @@
         
         .diagram-step i { font-size: clamp(1.2rem, 2vw, 2rem); margin-bottom: 5px; }
 
-        .step-1 { left: -20%; top: 5%; border-color: var(--accent-blue); }
-        .step-1 i { color: var(--accent-blue); }
-        
-        .step-2 { left: -20%; bottom: 5%; border-color: var(--accent-green); }
-        .step-2 i { color: var(--accent-green); }
-        
-        .step-5 { right: -20%; top: 5%; border-color: var(--accent-yellow); }
-        .step-5 i { color: var(--accent-yellow); }
-        
-        .step-6 { right: -20%; bottom: 5%; border-color: var(--accent-red); }
-        .step-6 i { color: var(--accent-red); }
-
-        .center-area {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+        .arrow-box {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 200px;
-            z-index: 1;
-        }
-
-        .arrow-top {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: clamp(1rem, 2vw, 1.5rem);
             color: var(--text-muted);
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
             text-align: center;
         }
-        .arrow-top i { font-size: clamp(2rem, 4vw, 3rem); margin-top: 10px; color: var(--accent-blue); }
 
-        .arrow-bottom {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: clamp(1rem, 2vw, 1.5rem);
-            color: var(--text-muted);
-            text-align: center;
+        .arrow-box i {
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: var(--accent-blue);
+            margin: 5px 0;
         }
-        .arrow-bottom i { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 10px; transform: rotate(180deg); color: var(--accent-blue); }
 
         .ruidos {
             font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -223,15 +204,15 @@
             text-align: center;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            margin: 10px 0;
         }
         .ruidos i { color: var(--accent-yellow); font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 10px; }
 
         .canal-badge {
             background: var(--card-bg);
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 20px;
             font-weight: bold;
-            margin-top: 10px;
             color: var(--accent-blue);
             font-size: clamp(0.9rem, 1.2vw, 1.2rem);
             border: 1px solid var(--accent-blue);
@@ -451,54 +432,58 @@
         <div class="slide">
           <div class="slide-content-wrapper">
             <h2>El Proceso de Comunicación</h2>
-            <div class="diagram-container">
+            
+            <div class="diagram-grid">
                 
-                <div class="arrow-top">
-                    <span>3. Envío / Mensaje</span><br>
-                    <i class="fa-solid fa-arrow-right-long"></i>
-                </div>
-
-                <!-- Emisor -->
-                <div class="person-circle sender">
-                    <i class="fa-solid fa-head-side-cough"></i>
-                    <div class="diagram-step step-1">
-                        <i class="fa-solid fa-brain"></i>
+                <!-- Columna Emisor -->
+                <div class="actor-col">
+                    <div class="diagram-step" style="border-color: var(--accent-blue);">
+                        <i class="fa-solid fa-brain" style="color: var(--accent-blue);"></i>
                         <span>1. Decido</span>
                     </div>
-                    <div class="diagram-step step-2">
-                        <i class="fa-solid fa-heart"></i>
+                    <div class="person-circle sender">
+                        <i class="fa-solid fa-head-side-cough"></i>
+                    </div>
+                    <div class="diagram-step" style="border-color: var(--accent-green);">
+                        <i class="fa-solid fa-heart" style="color: var(--accent-green);"></i>
                         <span>2. Traduzco</span>
                     </div>
                 </div>
 
-                <!-- Centro -->
-                <div class="center-area">
+                <!-- Columna Centro -->
+                <div class="center-col">
+                    <div class="arrow-box">
+                        <span>3. Envío / Mensaje</span>
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                    </div>
                     <div class="ruidos">
                         <i class="fa-solid fa-bolt"></i><br>
                         Ruidos
                     </div>
                     <span class="canal-badge">4. Canal</span>
+                    <div class="arrow-box">
+                        <i class="fa-solid fa-arrow-left-long"></i>
+                        <span>7. Feedback</span>
+                    </div>
                 </div>
 
-                <!-- Receptor -->
-                <div class="person-circle receiver">
-                    <i class="fa-solid fa-ear-listen"></i>
-                    <div class="diagram-step step-5">
-                        <i class="fa-solid fa-puzzle-piece"></i>
+                <!-- Columna Receptor -->
+                <div class="actor-col">
+                    <div class="diagram-step" style="border-color: var(--accent-yellow);">
+                        <i class="fa-solid fa-puzzle-piece" style="color: var(--accent-yellow);"></i>
                         <span>5. Recibís</span>
                     </div>
-                    <div class="diagram-step step-6">
-                        <i class="fa-solid fa-cogs"></i>
+                    <div class="person-circle receiver">
+                        <i class="fa-solid fa-ear-listen"></i>
+                    </div>
+                    <div class="diagram-step" style="border-color: var(--accent-red);">
+                        <i class="fa-solid fa-cogs" style="color: var(--accent-red);"></i>
                         <span>6. Interpretas</span>
                     </div>
                 </div>
-                
-                <div class="arrow-bottom">
-                    <i class="fa-solid fa-arrow-left-long"></i><br>
-                    <span>7. Feedback</span>
-                </div>
 
             </div>
+            
           </div>
         </div>
 
